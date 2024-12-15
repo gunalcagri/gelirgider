@@ -14,30 +14,21 @@ import {
   Sidebar,
   SidebarBody,
   SidebarFooter,
-  SidebarHeader,
-  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
   SidebarSpacer,
 } from '@/components/sidebar'
 import { SidebarLayout } from '@/components/sidebar-layout'
-import { getEvents } from '@/data'
 import {
   ArrowRightStartOnRectangleIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  Cog8ToothIcon,
   LightBulbIcon,
-  PlusIcon,
   ShieldCheckIcon,
   UserCircleIcon,
 } from '@heroicons/react/16/solid'
 import {
   Cog6ToothIcon,
   HomeIcon,
-  QuestionMarkCircleIcon,
-  SparklesIcon,
   Square2StackIcon,
   TicketIcon,
 } from '@heroicons/react/20/solid'
@@ -73,19 +64,12 @@ function AccountDropdownMenu({ anchor }: { anchor: 'top start' | 'bottom end' })
 }
 
 export function ApplicationLayout({
-  events,
   children,
 }: {
-  events: Awaited<ReturnType<typeof getEvents>>
   children: React.ReactNode
 }) {
   let pathname = usePathname()
-  if (typeof window !== 'undefined') {
-    console.log(localStorage.getItem('expenses'))
-
-    localStorage.setItem('expenses', JSON.stringify([{ expense: '100$' }]))
-
-  }
+  
   return (
     <SidebarLayout
       navbar={
@@ -104,18 +88,27 @@ export function ApplicationLayout({
                 <HomeIcon />
                 <SidebarLabel>Home</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/events" current={pathname.startsWith('/events')}>
+              <SidebarItem href="/categories" current={pathname.startsWith('/categories')}>
                 <Square2StackIcon />
-                <SidebarLabel>Events</SidebarLabel>
+                <SidebarLabel>Expense Categories</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem href="/incomeCategories" current={pathname.startsWith('/incomeCategories')}>
+                <Square2StackIcon />
+                <SidebarLabel>Income Categories</SidebarLabel>
               </SidebarItem>
               <SidebarItem href="/expenses" current={pathname.startsWith('/expenses')}>
                 <TicketIcon />
-                <SidebarLabel>Expenses</SidebarLabel>
+                <SidebarLabel> Expenses </SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/settings" current={pathname.startsWith('/settings')}>
+              <SidebarItem href="/incomes" current={pathname.startsWith('/incomes')}>
+                <TicketIcon />
+                <SidebarLabel> Incomes </SidebarLabel>
+              </SidebarItem>
+              <SidebarItem href="/reports" current={pathname.startsWith('/reports')}>
                 <Cog6ToothIcon />
-                <SidebarLabel>Settings</SidebarLabel>
+                <SidebarLabel>Reports</SidebarLabel>
               </SidebarItem>
+             
             </SidebarSection>
 
 
