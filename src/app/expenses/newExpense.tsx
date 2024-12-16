@@ -89,7 +89,7 @@ export function NewExpense({ ...props }: React.ComponentPropsWithoutRef<typeof B
               </Field>
               <Field>
                 <Label>Amount</Label>
-                <Input name="amount" defaultValue={0} placeholder="$0.00" autoFocus />
+                <Input name="amount" defaultValue={0} type='number' step={0.01} placeholder="0.00" autoFocus />
               </Field>
               <Field>
                 <Label>Category</Label>

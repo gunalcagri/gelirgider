@@ -82,7 +82,7 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
               </Field>
               <Field>
                 <Label>Amount</Label>
-                <Input name="amount" defaultValue={0} placeholder="$0.00" autoFocus />
+                <Input name="amount" type="number" step={0.01} defaultValue={0} placeholder="0.00" autoFocus />
               </Field>
               <Field>
                 <Label>Category</Label>
