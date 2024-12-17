@@ -95,10 +95,23 @@ export function ApplicationLayout({
     initializeTheme()
     
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    if(mediaQuery.media == '(prefers-color-scheme: dark)') {
-      document.documentElement.classList.toggle('dark', true)
+    if(localStorage.getItem('theme') == 'light' && mediaQuery.media == '(prefers-color-scheme: dark)') {
+      localStorage.setItem('theme', 'light')
+    }else if(localStorage.getItem('theme') == 'dark' && mediaQuery.media == '(prefers-color-scheme: dark)') {
       localStorage.setItem('theme', 'dark')
     }
+    else if(localStorage.getItem('theme') == 'light' && mediaQuery.media == '(prefers-color-scheme: light)') {
+      localStorage.setItem('theme', 'light')
+    }else if(localStorage.getItem('theme') == 'dark' && mediaQuery.media == '(prefers-color-scheme: light)') {
+      localStorage.setItem('theme', 'dark')
+    }
+    else if(localStorage.getItem('theme') == null && mediaQuery.media == '(prefers-color-scheme: dark)') {
+      localStorage.setItem('theme', 'dark')
+    }
+    else if(localStorage.getItem('theme') == null && mediaQuery.media == '(prefers-color-scheme: light)') {
+      localStorage.setItem('theme', 'light')
+    }
+    
     const handleChange = (e: MediaQueryListEvent) => {
       const savedTheme = localStorage.getItem('theme')
       if (!savedTheme) {
