@@ -54,7 +54,7 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
     incomeStore.addIncomeItem({
       id: crypto.randomUUID(),
       description: formData.get('description') as string,
-      amount: Number(unformat(formData.get('amount') as string)),
+      amount: Number(unformat(formData.get('amount') as string, 'tr-TR')),
       category: incomeStore.incomeCategories.find(category => category.id === selectedCategory) || { id: '', name: '' },
       date: formData.get('date') as string,
     })

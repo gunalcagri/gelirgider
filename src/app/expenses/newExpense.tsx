@@ -100,7 +100,7 @@ export function NewExpense({ ...props }: React.ComponentPropsWithoutRef<typeof B
                   locales="tr-TR"
                   format="currency"
                   currency="TRY"
-                  onChange={(e) => setAmount(Number(unformat(e.target.value)))}
+                  onChange={(e) => setAmount(Number(unformat(e.target.value,'tr-TR')))}
                 />
               </Field>
               <Field>
