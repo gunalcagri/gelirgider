@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { NewIncome } from '../incomes/newIncome'
 import { EditIncome } from '../incomes/editIncome'
 import { IncomeCategory,IncomeItem } from '../types'
+import { form } from 'framer-motion/client'
 
 
 
@@ -19,6 +20,11 @@ export default  function Incomes() {
   let [page, setPage] = useState(0);
   let itemsPerPage = 10;
   const incomes = incomeStore.incomeItems.sort((a: IncomeItem, b: IncomeItem) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  const formatter = new Intl.NumberFormat('tr-TR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   return (
     <>
@@ -46,7 +52,7 @@ export default  function Incomes() {
                   <span>{income.category.name}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-right">{income.amount} ₺</TableCell>
+              <TableCell className="text-right">{formatter.format(income.amount)} ₺</TableCell>
               <TableCell className="text-right">
                 <EditIncome incomeToEdit={income} />
                 <Button color="red" type="button" onClick={() => {setIncomeToDelete(income); setIsOpen(true)}}>Delete</Button>

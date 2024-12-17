@@ -66,6 +66,12 @@ export default  function Home() {
     },[expenseStore])
 
 
+    const formatter = new Intl.NumberFormat('tr-TR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+
   return (
     <>
       <Heading>Hello, </Heading>
@@ -125,7 +131,7 @@ export default  function Home() {
                   <span>{income.category}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-right">{income.amount} ₺</TableCell>
+              <TableCell className="text-right">{formatter.format(income.amount)} ₺</TableCell>
             </TableRow>
           ))}
         </TableBody>

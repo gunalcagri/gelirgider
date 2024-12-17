@@ -10,6 +10,7 @@ import { use, useState } from 'react'
 import { ExpenseProvider, useExpense } from '@/app/context/store'
 import { SpeakerWaveIcon } from '@heroicons/react/16/solid'
 import { IncomeCategory } from '../types'
+import { InputNumberFormat, unformat } from '@react-input/number-format';
 
 export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Button>) {
   let [isOpen, setIsOpen] = useState(false)
@@ -41,7 +42,7 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
 
 
   }
-   
+  
 
   const saveExpense = (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,7 +54,7 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
     incomeStore.addIncomeItem({
       id: crypto.randomUUID(),
       description: formData.get('description') as string,
-      amount: Number(formData.get('amount')),
+      amount: Number(unformat(formData.get('amount') as string)),
       category: incomeStore.incomeCategories.find(category => category.id === selectedCategory) || { id: '', name: '' },
       date: formData.get('date') as string,
     })
@@ -82,7 +83,14 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
               </Field>
               <Field>
                 <Label>Amount</Label>
-                <Input name="amount" type="number" step={0.01} defaultValue={0} min={0} placeholder="0.00" autoFocus />
+                <InputNumberFormat
+                  className='relative block w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white border border-zinc-950/10 data-[hover]:border-zinc-950/20 dark:border-white/10 dark:data-[hover]:border-white/20 bg-transparent dark:bg-white/5 focus:outline-none data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-600 data-[invalid]:data-[hover]:dark:border-red-600 disabled:border-zinc-950/20 disabled:dark:border-white/15 disabled:dark:bg-white/[2.5%] dark:data-[hover]:disabled:border-white/15'
+                  placeholder="0.00"
+                  name="amount"
+                  locales="tr-TR"
+                  format="currency"
+                  currency="TRY"
+                />
               </Field>
               <Field>
                 <Label>Category</Label>

@@ -19,6 +19,11 @@ export default  function Expenses() {
   let itemsPerPage = 10;
   const expenses = expenseStore.items.sort((a: ExpenseItem, b: ExpenseItem) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
+  const formatter = new Intl.NumberFormat('tr-TR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <>
       <div className="flex items-end justify-between gap-4">
@@ -45,7 +50,7 @@ export default  function Expenses() {
                   <span className="dark:text-white">{expense.category.name}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-right dark:text-white">{expense.amount} ₺</TableCell>
+              <TableCell className="text-right dark:text-white">{formatter.format(Number(expense.amount))} ₺</TableCell>
               <TableCell className="text-right">
                 <EditExpense expenseToEdit={expense} />
                 <Button color="red" type="button" onClick={() => {setExpenseToDelete(expense); setIsOpen(true)}} className="dark:bg-red-700 dark:hover:bg-red-600">Delete</Button>
