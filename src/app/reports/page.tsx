@@ -180,7 +180,7 @@ const Reports: React.FC = () => {
       </div>
     </div>
 
-    <div id="charts-part-1" className="mt-4 space-y-4">
+    <div id="charts-part-1" className="mt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
       <div>
         <h2 className="text-lg font-semibold dark:text-white">Expenses by Category {format(monthToCalculate, 'MMMM yyyy')}</h2>
         <canvas id="expenses-chart-by-month"></canvas>
@@ -191,7 +191,7 @@ const Reports: React.FC = () => {
       </div>
     </div>
 
-    <div id="charts-part-2" className="mt-4 space-y-4">
+    <div id="charts-part-2" className="mt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
       <div>
         <h2 className="text-lg font-semibold dark:text-white">Expenses by Category {format(monthToCalculate, 'yyyy')}</h2>
         <canvas id="expenses-chart-by-year"></canvas>
@@ -202,9 +202,9 @@ const Reports: React.FC = () => {
       </div>
     </div>
 
-    <div id="charts-part-3" className="mt-4">
+    <div id="charts-part-3" className="mt-8">
       <h1 className="text-xl font-bold text-center text-gray-900 dark:text-white">All Incomes and Expenses</h1>
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 md:grid md:grid-cols-2 md:gap-4">
         <div>
           <h2 className="text-lg font-semibold dark:text-white">Expenses by Category</h2>
           <canvas id="expenses-chart"></canvas>
@@ -216,8 +216,7 @@ const Reports: React.FC = () => {
       </div>
     </div>
   </div>
-
-        </>
+</>
     );
 };
 
