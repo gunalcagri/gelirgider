@@ -157,72 +157,66 @@ const Reports: React.FC = () => {
 
     return (
         <>
-            <Button onClick={downloadPDF}>Download Report</Button>
-            <div id="report-content">
-                <div id="report-header">
-                <StatsGrid monthToCalculate={monthToCalculate} expenseStore={useExpense()}></StatsGrid>
-                
+  <Button onClick={downloadPDF}>Download Report</Button>
+  <div id="report-content" className="p-4">
+    <div id="report-header">
+      <StatsGrid monthToCalculate={monthToCalculate} expenseStore={useExpense()} />
+      <div className="flex items-center mt-4 text-gray-900 dark:text-white">
+        <button
+          type="button"
+          className="flex items-center justify-center p-2 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
+          onClick={() => setMonthToCalculate(new Date(monthToCalculate.setMonth(monthToCalculate.getMonth() - 1)))}
+        >
+          <ChevronLeftIcon className="w-6 h-6" aria-hidden="true" />
+        </button>
+        <div className="flex-1 text-sm font-semibold text-center">{format(monthToCalculate, 'MMMM yyyy')}</div>
+        <button
+          type="button"
+          className="flex items-center justify-center p-2 text-gray-400 hover:text-gray-500"
+          onClick={() => setMonthToCalculate(new Date(monthToCalculate.setMonth(monthToCalculate.getMonth() + 1)))}
+        >
+          <ChevronRightIcon className="w-6 h-6" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
 
-                <div className="flex items-center mt-4 text-gray-900 dark:text-white">
-                    <button
-                        type="button"
-                        className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
-                        onClick={() => setMonthToCalculate(new Date(monthToCalculate.setMonth(monthToCalculate.getMonth() - 1)))}
-                    >
-                        <span className="sr-only">Previous month</span>
-                        <ChevronLeftIcon className="size-12" aria-hidden="true" />
-                    </button>
-                    <div className="flex-auto text-sm font-semibold ml-12 mr-12 min-w-40 text-center">{format(monthToCalculate, 'MMMM yyyy')}</div>
-                    <button
-                        type="button"
-                        className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-                        onClick={() => setMonthToCalculate(new Date(monthToCalculate.setMonth(monthToCalculate.getMonth() + 1)))}
-                    >
-                        <span className="sr-only">Next month</span>
-                        <ChevronRightIcon className="size-12" aria-hidden="true" />
-                    </button>
-                </div>
-                </div>
+    <div id="charts-part-1" className="mt-4 space-y-4">
+      <div>
+        <h2 className="text-lg font-semibold dark:text-white">Expenses by Category {format(monthToCalculate, 'MMMM yyyy')}</h2>
+        <canvas id="expenses-chart-by-month"></canvas>
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold dark:text-white">Incomes by Category {format(monthToCalculate, 'MMMM yyyy')}</h2>
+        <canvas id="incomes-chart-by-month"></canvas>
+      </div>
+    </div>
 
-                <div id="charts-part-1" className="mt-4 mb-8 grid gap-8 sm:grid-cols-2 xl:grid-cols-2">
-                    <div>
-                        <h2 className='dark:text-white'>Expenses by Category {format(monthToCalculate, 'MMMM yyyy')}</h2>
-                        <canvas id="expenses-chart-by-month" width="400" height="200"></canvas>
-                    </div>
-                    <div>
-                        <h2 className='dark:text-white'>Incomes by Category {format(monthToCalculate, 'MMMM yyyy')}</h2>
-                        <canvas id="incomes-chart-by-month" width="400" height="200"></canvas>
-                    </div>
-                </div>
-                <div id="charts-part-2" className="mt-4 mb-8 grid gap-8 sm:grid-cols-2 xl:grid-cols-2">
-                    <div>
-                        <h2 className='dark:text-white'>Expenses by Category {format(monthToCalculate, 'yyyy')}</h2>
-                        <canvas id="expenses-chart-by-year" width="400" height="200"></canvas>
-                    </div>
-                    <div>
-                        <h2 className='dark:text-white'>Incomes by Category {format(monthToCalculate, 'yyyy')}</h2>
-                        <canvas id="incomes-chart-by-year" width="400" height="200"></canvas>
-                    </div>
-                    </div>
-                
+    <div id="charts-part-2" className="mt-4 space-y-4">
+      <div>
+        <h2 className="text-lg font-semibold dark:text-white">Expenses by Category {format(monthToCalculate, 'yyyy')}</h2>
+        <canvas id="expenses-chart-by-year"></canvas>
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold dark:text-white">Incomes by Category {format(monthToCalculate, 'yyyy')}</h2>
+        <canvas id="incomes-chart-by-year"></canvas>
+      </div>
+    </div>
 
-                <div id="charts-part-3">
-                <div className="text-center">
-                    <h1 className="font-bold text-gray-900 dark:text-white">All Incomes and Expenses</h1>
-                </div>
+    <div id="charts-part-3" className="mt-4">
+      <h1 className="text-xl font-bold text-center text-gray-900 dark:text-white">All Incomes and Expenses</h1>
+      <div className="mt-4 space-y-4">
+        <div>
+          <h2 className="text-lg font-semibold dark:text-white">Expenses by Category</h2>
+          <canvas id="expenses-chart"></canvas>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold dark:text-white">Incomes by Category</h2>
+          <canvas id="incomes-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                <div className="mt-4 mb-8 grid gap-8 sm:grid-cols-2 xl:grid-cols-2">
-                    <div>
-                        <h2 className='dark:text-white'>Expenses by Category</h2>
-                        <canvas id="expenses-chart" width="400" height="200"></canvas>
-                    </div>
-                    <div>
-                        <h2 className='dark:text-white'>Incomes by Category</h2>
-                        <canvas id="incomes-chart" width="400" height="200"></canvas>
-                    </div>
-                </div>
-                </div>
-            </div>
         </>
     );
 };
