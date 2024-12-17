@@ -9,9 +9,7 @@ import html2canvas from 'html2canvas';
 import { Button } from '@/components/button';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { startOfMonth, format } from 'date-fns';
-import { Stats } from 'fs';
 import { StatsGrid } from './stats';
-import { img } from 'framer-motion/client';
 
 const Reports: React.FC = () => {
     const { categories, incomeCategories, items: expenses, incomeItems: incomes } = useExpense();
@@ -100,7 +98,7 @@ const Reports: React.FC = () => {
             const element = document.getElementById(id);
             if (!element) return;
             const canvas = await html2canvas(element, { 
-                scale: window.devicePixelRatio || 1,
+                scale: 2, // Higher scale for better quality on mobile
                 backgroundColor: isDarkMode ? '#1f2937' : '#ffffff'
             });
             canvases.push(canvas);
@@ -109,12 +107,12 @@ const Reports: React.FC = () => {
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 10;
+        const margin = 5; // Smaller margin for mobile
         const contentWidth = pageWidth - 2 * margin;
         let yPosition = margin;
 
         if (isDarkMode) {
-            pdf.setFillColor(31, 41, 55); // Dark background color
+            pdf.setFillColor(31, 41, 55);
             pdf.rect(0, 0, pageWidth, pageHeight, 'F');
         }
 
@@ -143,7 +141,18 @@ const Reports: React.FC = () => {
             yPosition += imgHeight + margin;
         }
 
-        pdf.save('report.pdf');
+        const fileName = `report_${format(new Date(), 'yyyyMMdd_HHmmss')}.pdf`;
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            const blob = pdf.output('blob');
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url);
+        } else {
+            pdf.save(fileName);
+        }
     };
 
     return (
