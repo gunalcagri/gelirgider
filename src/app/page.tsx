@@ -110,7 +110,7 @@ export default  function Home() {
         <TableHead>
           <TableRow>
             <TableHeader>Date</TableHeader>
-            <TableHeader>DDescription</TableHeader>
+            <TableHeader>Description</TableHeader>
             <TableHeader>Category</TableHeader>
             <TableHeader className="text-right">Amount</TableHeader>
           </TableRow>
