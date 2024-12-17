@@ -10,7 +10,6 @@ import { use, useState } from 'react'
 import { ExpenseProvider, useExpense } from '@/app/context/store'
 import { SpeakerWaveIcon } from '@heroicons/react/16/solid'
 
-// Define the shape of a category
 interface Category {
   name: string;
   limit: number;
@@ -20,55 +19,60 @@ export function NewExpense({ ...props }: React.ComponentPropsWithoutRef<typeof B
   let [isOpen, setIsOpen] = useState(false)
   let [isOpenNewCategory, setIsOpenNewCategory] = useState(false)
   let [selectedCategory, setSelectedCategory] = useState<string>('')
+  let [isInstallment, setIsInstallment] = useState(false)
+  let [installmentCount, setInstallmentCount] = useState(2)
+  let [amount, setAmount] = useState(0)
 
   const expenses = useExpense()
   const categories = expenses.categories || []
 
   const saveCategory = (e: React.FormEvent) => {
     e.preventDefault()
-
     setIsOpenNewCategory(false)
-
     const formData = new FormData(e.target as HTMLFormElement)
-
     const id = crypto.randomUUID()
     expenses.addCategory({
       id: id,
       name: formData.get('name') as string,
       limit: Number(formData.get('limit')),
     })
-
-    setSelectedCategory(id);
-
-    document.getElementById('category')?.setAttribute('value', selectedCategory);
-    
-
-   
-
-
+    setSelectedCategory(id)
+    document.getElementById('category')?.setAttribute('value', id)
   }
-   
 
   const saveExpense = (e: React.FormEvent) => {
     e.preventDefault()
-
     setIsOpen(false)
-
+    setIsInstallment(false)
     const formData = new FormData(e.target as HTMLFormElement)
+    const date = new Date(formData.get('date') as string)
 
-    expenses.addItem({
-      id: crypto.randomUUID(),
-      name: formData.get('name') as string,
-      amount: -Number(formData.get('amount')),
-      category: expenses.categories.find(category => category.id === selectedCategory) || { id: '', name: '', limit: 0 },
-      date: formData.get('date') as string,
-    })
+    if (isInstallment) {
+      for (let i = 0; i < installmentCount; i++) {
+        const installmentDate = new Date(date)
+        installmentDate.setMonth(date.getMonth() + i)
+        expenses.addItem({
+          id: crypto.randomUUID(),
+          description: `${formData.get('description')} (${i + 1}/${installmentCount})`,
+          amount: -amount / installmentCount,
+          category: expenses.categories.find(category => category.id === selectedCategory) || { id: '', name: '', limit: 0 },
+          date: installmentDate.toISOString().split('T')[0],
+        })
+      }
+    } else {
+      expenses.addItem({
+        id: crypto.randomUUID(),
+        description: formData.get('description') as string,
+        amount: -amount,
+        category: expenses.categories.find(category => category.id === selectedCategory) || { id: '', name: '', limit: 0 },
+        date: formData.get('date') as string,
+      })
+    }
   }
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedCategory(value);
-    console.log(value)
     if (value === 'new') {
       setIsOpenNewCategory(true);
     }
@@ -80,44 +84,59 @@ export function NewExpense({ ...props }: React.ComponentPropsWithoutRef<typeof B
       <Dialog open={isOpen} onClose={setIsOpen}>
         <form onSubmit={saveExpense}>
           <DialogTitle>New Expense</DialogTitle>
-
           <DialogBody>
             <FieldGroup>
               <Field>
-                <Label>Name</Label>
-                <Input name="name" defaultValue="" placeholder="Expense name" autoFocus />
+                <Label>Description</Label>
+                <Input name="description" defaultValue="" placeholder="Expense description" autoFocus />
               </Field>
               <Field>
                 <Label>Amount</Label>
-                <Input name="amount" defaultValue={0} type='number' step={0.01} placeholder="0.00" autoFocus />
+                <Input 
+                  name="amount" 
+                  defaultValue={0} 
+                  type='number' 
+                  min={0}
+                  step={0.01} 
+                  placeholder="0.00"
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                />
               </Field>
               <Field>
+                <CheckboxField>
+                  <Checkbox checked={isInstallment} onChange={() => setIsInstallment(!isInstallment)} />
+                  <Label>Installment</Label>
+                </CheckboxField>
+              </Field>
+              {isInstallment && (
+                <Field>
+                  <Label>Number of Installments</Label>
+                  <Input 
+                    type="number" 
+                    onChange={(e) => setInstallmentCount(Number(e.target.value))}
+                  />
+                  <h2> Installment Amount: {amount ? (amount / installmentCount).toFixed(2) : '0.00'} </h2>
+                </Field>
+              )}
+              <Field>
                 <Label>Category</Label>
-                <Select id="category" name="category"  value={selectedCategory} onChange={handleCategoryChange}>
-                  <option value="" disabled>
-                    Select a category&hellip;
-                  </option>
+                <Select id="category" name="category" value={selectedCategory} onChange={handleCategoryChange}>
+                  <option value="" disabled>Select a category&hellip;</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
+                    <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                   <option value="new">New Category</option>
-
-
                 </Select>
               </Field>
               <Field>
                 <Label>Date</Label>
                 <Input type="date" name="date" defaultValue="" />
               </Field>
-
+              
             </FieldGroup>
           </DialogBody>
           <DialogActions>
-            <Button plain onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>
+            <Button plain onClick={() => setIsOpen(false)}>Cancel</Button>
             <Button type="submit">Save</Button>
           </DialogActions>
         </form>
@@ -125,26 +144,23 @@ export function NewExpense({ ...props }: React.ComponentPropsWithoutRef<typeof B
 
       <Dialog open={isOpenNewCategory} onClose={setIsOpenNewCategory}>
         <form onSubmit={saveCategory}>
-        <DialogTitle>New Category</DialogTitle>
-
-        <DialogBody>
-          <FieldGroup>
-            <Field>
-              <Label>Name</Label>
-              <Input name="name" defaultValue="" placeholder="Category name" autoFocus />
-            </Field>
-            <Field>
-              <Label>Limit</Label>
-              <Input name="limit" defaultValue={0} placeholder="0.00" autoFocus />
-            </Field>
-          </FieldGroup>
-        </DialogBody>
-        <DialogActions>
-          <Button plain onClick={() => setIsOpenNewCategory(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Save</Button>
-        </DialogActions>
+          <DialogTitle>New Category</DialogTitle>
+          <DialogBody>
+            <FieldGroup>
+              <Field>
+                <Label>Name</Label>
+                <Input name="name" defaultValue="" placeholder="Category name" autoFocus />
+              </Field>
+              <Field>
+                <Label>Limit</Label>
+                <Input name="limit" defaultValue={0} placeholder="0.00" />
+              </Field>
+            </FieldGroup>
+          </DialogBody>
+          <DialogActions>
+            <Button plain onClick={() => setIsOpenNewCategory(false)}>Cancel</Button>
+            <Button type="submit">Save</Button>
+          </DialogActions>
         </form>
       </Dialog>
     </>

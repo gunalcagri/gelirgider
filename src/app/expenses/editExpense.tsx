@@ -8,22 +8,7 @@ import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/dia
 import { Button } from '@/components/button'
 import { FieldGroup, Field, Label } from '@/components/fieldset'
 import { IncomeCategory } from '../types'
-
-// Define the shape of a category
-interface Category {
-  id: string;
-  name: string;
-  limit: number;
-}
-
-// Define the shape of an expense item
-interface ExpenseItem {
-  id: string;
-  name: string;
-  amount: number;
-  category: Category;
-  date: string;
-}
+import { ExpenseItem } from '../types'
 
 export function EditExpense({ expenseToEdit }: { expenseToEdit: ExpenseItem }) {
   const { categories, updateItem } = useExpense()
@@ -35,7 +20,7 @@ export function EditExpense({ expenseToEdit }: { expenseToEdit: ExpenseItem }) {
 
     updateItem({
       ...expenseToEdit,
-      name: (e.target as any).name.value,
+      description: (e.target as any).description.value,
       amount: Number((e.target as any).amount.value),
       category: expenseToEdit.category,
       date: (e.target as any).date.value,
@@ -56,8 +41,8 @@ export function EditExpense({ expenseToEdit }: { expenseToEdit: ExpenseItem }) {
           <DialogBody>
             <FieldGroup>
               <Field>
-                <Label>Name</Label>
-                <Input name="name" defaultValue={expenseToEdit.name} placeholder="Expense name" autoFocus />
+                <Label>Description</Label>
+                <Input name="description" defaultValue={expenseToEdit.description} placeholder="Expense description" autoFocus />
               </Field>
               <Field>
                 <Label>Amount</Label>

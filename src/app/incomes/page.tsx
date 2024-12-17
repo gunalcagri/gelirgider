@@ -16,6 +16,8 @@ export default  function Incomes() {
   let [isOpen, setIsOpen] = useState(false)
   let [incomeToDelete, setIncomeToDelete] = useState<IncomeItem | null>(null)
   let incomeStore =  useExpense()
+  let [page, setPage] = useState(0);
+  let itemsPerPage = 10;
   const incomes = incomeStore.incomeItems.sort((a: IncomeItem, b: IncomeItem) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
@@ -28,17 +30,17 @@ export default  function Incomes() {
         <TableHead>
           <TableRow>
             <TableHeader>Date</TableHeader>
-            <TableHeader>Name</TableHeader>
+            <TableHeader>Description</TableHeader>
             <TableHeader>Category</TableHeader>
             <TableHeader className="text-right">Amount</TableHeader>
+            <TableHeader className="text-right">Actions</TableHeader>
           </TableRow>
         </TableHead>
         <TableBody>
-          {incomes.map((income: IncomeItem) => (
-            <TableRow key={income.id}  title={`Income #${income.id}`}>
-              
+          {incomes.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((income: IncomeItem) => (
+            <TableRow key={income.id} title={`Income #${income.id}`}>
               <TableCell className="text-zinc-500">{income.date}</TableCell>
-              <TableCell>{income.name}</TableCell>
+              <TableCell>{income.description}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <span>{income.category.name}</span>
@@ -46,19 +48,33 @@ export default  function Incomes() {
               </TableCell>
               <TableCell className="text-right">{income.amount} ₺</TableCell>
               <TableCell className="text-right">
-                <EditIncome incomeToEdit={income}></EditIncome>
-                <Button color="red" type="button" onClick={() =>{setIncomeToDelete(income); setIsOpen(true)}}>Delete</Button>
-              
+                <EditIncome incomeToEdit={income} />
+                <Button color="red" type="button" onClick={() => {setIncomeToDelete(income); setIsOpen(true)}}>Delete</Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <div className="mt-4 flex items-center justify-between">
+        <Button
+          onClick={() => setPage(Math.max(0, page - 1))}
+          disabled={page === 0}
+        >
+          Previous
+        </Button>
+        <span className='text-zinc-500 dark:text-zinc-400'>Page {page + 1} of {Math.ceil(incomes.length / itemsPerPage)}</span>
+        <Button
+          onClick={() => setPage(Math.min(Math.ceil(incomes.length / itemsPerPage) - 1, page + 1))}
+          disabled={page >= Math.ceil(incomes.length / itemsPerPage) - 1}
+        >
+          Next
+        </Button>
+      </div>
       <Dialog open={isOpen} onClose={setIsOpen}>
               <DialogTitle>Delete Income</DialogTitle>
               
               <DialogBody>
-                <p>Are you sure you want to delete {incomeToDelete?.name}?</p>
+                <p>Are you sure you want to delete {incomeToDelete?.category.name}?</p>
               </DialogBody>
               <DialogActions>
                 <Button plain onClick={() => setIsOpen(false)}>

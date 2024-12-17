@@ -2,35 +2,7 @@
 
 import { set } from 'date-fns';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-// Define the shape of a category
-interface Category {
-    id: string;
-    name: string;
-    limit: number;
-}
-// Define the shape of a  income category
-interface IncomeCategory {
-    id: string;
-    name: string;
-}
-// Define the shape of an expense item
-interface ExpenseItem {
-    id: string;
-    name: string;
-    amount: number;
-    category: Category;
-    date: string;
-}
-
-// Define the shape of an income item
-interface IncomeItem {
-    id: string;
-    name: string;
-    amount: number;
-    category: IncomeCategory;
-    date: string;
-}
+import { Category, IncomeCategory, ExpenseItem, IncomeItem } from '../types';
 
 // Define the state shape
 interface ExpenseContextType {

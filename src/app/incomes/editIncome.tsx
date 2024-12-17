@@ -8,17 +8,7 @@ import { Dialog, DialogActions, DialogBody, DialogTitle } from '@/components/dia
 import { Button } from '@/components/button'
 import { FieldGroup, Field, Label } from '@/components/fieldset'
 import { IncomeCategory } from '../types'
-
-
-
-// Define the shape of an income item
-interface IncomeItem {
-  id: string;
-  name: string;
-  amount: number;
-  category: IncomeCategory;
-  date: string;
-}
+import { IncomeItem } from '../types'
 
 export function EditIncome({ incomeToEdit }: { incomeToEdit: IncomeItem }) {
   const { incomeCategories, updateIncomeItem } = useExpense()
@@ -30,7 +20,7 @@ export function EditIncome({ incomeToEdit }: { incomeToEdit: IncomeItem }) {
 
     updateIncomeItem({
       ...incomeToEdit,
-      name: (e.target as any).name.value,
+      description: (e.target as any).description.value,
       amount: Number((e.target as any).amount.value),
       category: incomeCategories.find(c => c.id === selectedCategory) || incomeToEdit.category,
       date: (e.target as any).date.value,
@@ -51,8 +41,8 @@ export function EditIncome({ incomeToEdit }: { incomeToEdit: IncomeItem }) {
           <DialogBody>
             <FieldGroup>
               <Field>
-                <Label>Name</Label>
-                <Input name="name" defaultValue={incomeToEdit.name} placeholder="Income name" autoFocus />
+                <Label>Description</Label>
+                <Input name="description" defaultValue={incomeToEdit.description} placeholder="Income name" autoFocus />
               </Field>
               <Field>
                 <Label>Amount</Label>

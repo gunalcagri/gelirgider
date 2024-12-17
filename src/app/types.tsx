@@ -14,7 +14,7 @@ export interface IncomeCategory {
 // Define the shape of an expense item
 export interface ExpenseItem {
     id: string;
-    name: string;
+    description: string;
     amount: number;
     date: string; // Assuming date is stored as a string
     category: Category;
@@ -22,7 +22,7 @@ export interface ExpenseItem {
 
 export interface IncomeItem {
     id: string;
-    name: string;
+    description: string;
     amount: number;
     category: IncomeCategory ;
     date: string;

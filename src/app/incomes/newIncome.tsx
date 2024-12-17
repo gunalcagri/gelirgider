@@ -52,7 +52,7 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
 
     incomeStore.addIncomeItem({
       id: crypto.randomUUID(),
-      name: formData.get('name') as string,
+      description: formData.get('name') as string,
       amount: Number(formData.get('amount')),
       category: incomeStore.incomeCategories.find(category => category.id === selectedCategory) || { id: '', name: '' },
       date: formData.get('date') as string,
@@ -77,12 +77,12 @@ export function NewIncome({ ...props }: React.ComponentPropsWithoutRef<typeof Bu
           <DialogBody>
             <FieldGroup>
               <Field>
-                <Label>Name</Label>
-                <Input name="name" defaultValue="" placeholder="Income name" autoFocus />
+                <Label>Description</Label>
+                <Input name="description" defaultValue="" placeholder="Income description" autoFocus />
               </Field>
               <Field>
                 <Label>Amount</Label>
-                <Input name="amount" type="number" step={0.01} defaultValue={0} placeholder="0.00" autoFocus />
+                <Input name="amount" type="number" step={0.01} defaultValue={0} min={0} placeholder="0.00" autoFocus />
               </Field>
               <Field>
                 <Label>Category</Label>

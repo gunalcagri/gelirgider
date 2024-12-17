@@ -33,9 +33,30 @@ import {
   TicketIcon,
 } from '@heroicons/react/20/solid'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
+
+const getSystemTheme = () => {
+  if (typeof window !== 'undefined') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  return 'light'
+}
 
 const toggleTheme = () => {
+  const isDark = document.documentElement.classList.contains('dark')
   document.documentElement.classList.toggle('dark')
+  localStorage.setItem('theme', isDark ? 'light' : 'dark')
+}
+
+const initializeTheme = () => {
+  const savedTheme = localStorage.getItem('theme')
+  const systemTheme = getSystemTheme()
+  
+  if (savedTheme) {
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+  } else {
+    document.documentElement.classList.toggle('dark', systemTheme === 'dark')
+  }
 }
 
 function AccountDropdownMenu({ anchor }: { anchor: 'top start' | 'bottom end' }) {
@@ -70,6 +91,21 @@ export function ApplicationLayout({
 }) {
   let pathname = usePathname()
   
+  useEffect(() => {
+    initializeTheme()
+    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = (e: MediaQueryListEvent) => {
+      const savedTheme = localStorage.getItem('theme')
+      if (!savedTheme) {
+        document.documentElement.classList.toggle('dark', e.matches)
+      }
+    }
+    
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
   return (
     <SidebarLayout
       navbar={
@@ -108,7 +144,6 @@ export function ApplicationLayout({
                 <Cog6ToothIcon />
                 <SidebarLabel>Reports</SidebarLabel>
               </SidebarItem>
-             
             </SidebarSection>
 
 
