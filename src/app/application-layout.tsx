@@ -95,6 +95,10 @@ export function ApplicationLayout({
     initializeTheme()
     
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    if(mediaQuery.media == '(prefers-color-scheme: dark)') {
+      document.documentElement.classList.toggle('dark', true)
+      localStorage.setItem('theme', 'dark')
+    }
     const handleChange = (e: MediaQueryListEvent) => {
       const savedTheme = localStorage.getItem('theme')
       if (!savedTheme) {
